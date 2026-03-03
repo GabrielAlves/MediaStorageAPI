@@ -1,15 +1,19 @@
 from flask import Blueprint, request, jsonify
 from .models import File
 from . import db
+from .auth import require_api_key
 from .storage_mode import upload_file, delete_file
+import uuid
 
 bp = Blueprint('api', __name__, url_prefix = '/api')
 
 @bp.get("/health")
+@require_api_key
 def health():
     return jsonify({"status" : "ok"}), 200
 
 @bp.post("/upload")
+@require_api_key
 def upload():
     if "file" not in request.files:
         return jsonify({"error" : "no file provided"}), 400
@@ -23,7 +27,11 @@ def upload():
     
     url = upload_file(file)
 
-    db_file = File(file_name = file.filename,
+    ext = os.path.splitext(file.filename)[1].lower()
+    safe_name = file.filename.replace("/", "_").replace("\\", "_")
+    unique_name = f"{uuid.uuid4().hex}{ext}" 
+
+    db_file = File(file_name = file.unique_name,
                       file_type = file_type,
                       file_url = url
                     )
@@ -34,6 +42,7 @@ def upload():
     return jsonify({"message" : "File uploaded", "id" : db_file.id}), 201
 
 @bp.get("/list")
+@require_api_key
 def list_files():
     db_files = File.query.all()
 
@@ -42,6 +51,7 @@ def list_files():
             "id" : f.id,
             "file_name" : f.file_name,
             "file_type" : f.file_type,
+            "file_url" : f.file_url,
             "created_at" : f.created_at
         } for f in db_files
     ]
@@ -49,6 +59,7 @@ def list_files():
     return jsonify(results), 200
 
 @bp.delete("/delete/<int:id>")
+@require_api_key
 def delete(id):
     db_file = File.query.get_or_404(id)
 
