@@ -1,6 +1,6 @@
 from flask import request, jsonify, current_app
 
-# TODO: This method have no expiration time, no users or permissions, only a single key...use a better one afterwards (jwt?). 
+# TODO: This method have no expiration time, no users or permissions, only a single key...change it for a better one. 
 def require_api_key(func):
     def wrapper(*args, **kwargs):
         api_key = request.headers.get("my-api-key")

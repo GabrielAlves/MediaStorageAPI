@@ -4,6 +4,7 @@ from . import db
 from .auth import require_api_key
 from .storage_mode import upload_file, delete_file
 import uuid
+import os
 
 bp = Blueprint('api', __name__, url_prefix = '/api')
 
@@ -24,14 +25,15 @@ def upload():
         return jsonify({"error": "Empty filename"}), 400
 
     file_type = file.mimetype.split("/")[0]
-    
+
+    file_ext = os.path.splitext(file.filename)[1].lower()
+    safe_name = file.filename.replace("/", "_").replace("\\", "_")
+    unique_name = f"{uuid.uuid4().hex}{file_ext}" 
+
+    file.filename = unique_name
     url = upload_file(file)
 
-    ext = os.path.splitext(file.filename)[1].lower()
-    safe_name = file.filename.replace("/", "_").replace("\\", "_")
-    unique_name = f"{uuid.uuid4().hex}{ext}" 
-
-    db_file = File(file_name = file.unique_name,
+    db_file = File(file_name = unique_name,
                       file_type = file_type,
                       file_url = url
                     )
