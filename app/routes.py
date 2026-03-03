@@ -35,8 +35,26 @@ def upload():
 
 @bp.get("/list")
 def list_files():
-    pass
+    db_files = File.query.all()
 
-@bp.delete("/delete/{id}")
-def delete():
-    pass
+    results = [
+        {
+            "id" : f.id,
+            "file_name" : f.file_name,
+            "file_type" : f.file_type,
+            "created_at" : f.created_at
+        } for f in db_files
+    ]
+
+    return jsonify(results), 200
+
+@bp.delete("/delete/<int:id>")
+def delete(id):
+    db_file = File.query.get_or_404(id)
+
+    delete_file(db_file.file_name)
+
+    db.session.delete(db_file)
+    db.session.commit()
+
+    return jsonify({"message" : "File deleted"}), 200

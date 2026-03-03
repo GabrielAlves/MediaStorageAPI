@@ -14,5 +14,5 @@ def upload_file(file):
 def delete_file(filename):
     if current_app.config["STORAGE_MODE"] == "local":
         path = os.path.join(local_storage_folder_name, filename)
-        if os.path.exist(path):
+        if os.path.exists(path):
             os.remove(path)
