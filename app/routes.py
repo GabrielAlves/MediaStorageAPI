@@ -6,7 +6,7 @@ from .storage_mode import upload_file, delete_file
 import uuid
 import os
 
-bp = Blueprint('api', __name__, url_prefix = '/api')
+bp = Blueprint('api', __name__)
 
 @bp.get("/health")
 @require_api_key
@@ -26,14 +26,9 @@ def upload():
 
     file_type = file.mimetype.split("/")[0]
 
-    file_ext = os.path.splitext(file.filename)[1].lower()
-    safe_name = file.filename.replace("/", "_").replace("\\", "_")
-    unique_name = f"{uuid.uuid4().hex}{file_ext}" 
-
-    file.filename = unique_name
     url = upload_file(file)
 
-    db_file = File(file_name = unique_name,
+    db_file = File(file_name = file.filename,
                       file_type = file_type,
                       file_url = url
                     )
