@@ -1,10 +1,17 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 db = SQLAlchemy()
 
 def create_app(test_config = None):
     app = Flask(__name__)
+    CORS(
+        app,
+        origins=[
+                    "http://localhost:5001"
+                ]
+    )
 
     if test_config:
         app.config.update(test_config)

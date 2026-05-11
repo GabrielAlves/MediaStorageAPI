@@ -6,6 +6,7 @@ load_dotenv()
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "secretkey")
     SQLALCHEMY_DATABASE_URI = "sqlite:///./files.db"
+    # SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://usuario:senha@host:3306/banco"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAX_CONTENT_LENGTH = 10 * 1024 * 1024  # 10MB
 

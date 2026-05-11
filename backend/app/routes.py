@@ -9,12 +9,12 @@ import os
 bp = Blueprint('api', __name__)
 
 @bp.get("/health")
-@require_api_key
+# @require_api_key
 def health():
     return jsonify({"status" : "ok"}), 200
 
 @bp.post("/upload")
-@require_api_key
+# @require_api_key
 def upload():
     if "file" not in request.files:
         return jsonify({"error" : "no file provided"}), 400
@@ -42,7 +42,7 @@ def upload():
     return jsonify({"message" : "File uploaded", "id" : db_file.id}), 201
 
 @bp.get("/list")
-@require_api_key
+# @require_api_key
 def list_files():
     db_files = File.query.all()
 
@@ -59,7 +59,7 @@ def list_files():
     return jsonify(results), 200
 
 @bp.delete("/delete/<int:id>")
-@require_api_key
+# @require_api_key
 def delete(id):
     db_file = File.query.get_or_404(id)
 
