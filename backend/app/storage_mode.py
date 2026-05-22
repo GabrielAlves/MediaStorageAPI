@@ -3,11 +3,13 @@ import boto3
 from botocore.exceptions import BotoCoreError, ClientError
 from flask import current_app
 
-local_storage_folder_name = "uploads/"
+BASE_DIR = os.getcwd()
+local_storage_folder_name = "uploads"
+LOCAL_UPLOAD_FOLDER = os.path.join(BASE_DIR, local_storage_folder_name)
 
 def upload_file(file):
     if current_app.config["STORAGE_MODE"] == "local":
-        os.makedirs(local_storage_folder_name, exist_ok = True)
+        os.makedirs(LOCAL_UPLOAD_FOLDER, exist_ok = True)
         path = os.path.join(local_storage_folder_name, file.filename)
         file.save(path)
         return path

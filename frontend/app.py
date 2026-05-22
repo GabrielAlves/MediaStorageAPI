@@ -6,7 +6,7 @@ load_dotenv()
 
 app = Flask(__name__)
 
-API_BASE = os.getenv("BACKEND_API_BASE", "http://localhost:8080")
+API_BASE = os.getenv("BACKEND_API_BASE", "http://localhost:8000")
 print(API_BASE)
 
 @app.route("/")

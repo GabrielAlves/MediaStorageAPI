@@ -1,10 +1,11 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_from_directory, url_for
 from .models import File
 from . import db
 from .auth import require_api_key
 from .storage_mode import upload_file, delete_file
 import uuid
 import os
+from .storage_mode import LOCAL_UPLOAD_FOLDER
 
 bp = Blueprint('api', __name__)
 
@@ -33,7 +34,7 @@ def upload():
 
     db_file = File(file_name = file.filename,
                       file_type = file_type,
-                      file_url = url
+                      file_url = url_for("api.uploaded_file", filename = file.filename, _external = True)
                     )
 
     db.session.add(db_file)
@@ -69,3 +70,10 @@ def delete(id):
     db.session.commit()
 
     return jsonify({"message" : "File deleted"}), 200
+
+@bp.route("/uploads/<path:filename>")
+def uploaded_file(filename):
+    return send_from_directory(
+        LOCAL_UPLOAD_FOLDER,
+        filename
+    )

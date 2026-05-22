@@ -1,16 +1,33 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 db = SQLAlchemy()
 
 def create_app(test_config = None):
     app = Flask(__name__)
+    
+    cors_origins = os.getenv("CORS_ORIGINS", "")
+
+    if cors_origins.strip():
+        origins = [
+            origin.strip()
+            for origin in cors_origins.split(",")
+            if origin.strip()
+        ]
+    else:
+        origins = ["*"]
+
     CORS(
         app,
-        origins=[
-                    "http://localhost:5001"
-                ]
+        origins=origins,
+        supports_credentials=True,
+        methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Content-Type", "Authorization", "X-API-Key"]
     )
 
     if test_config:

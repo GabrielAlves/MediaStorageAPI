@@ -49,11 +49,7 @@ async function loadFiles() {
 
   try {
 
-    const response = await fetch(`${API_BASE}/list`, {
-      // headers: {
-      //   "X-API-Key": API_KEY
-      // }
-    });
+    const response = await fetch(`${API_BASE}/list`);
 
     const files = await response.json();
 
@@ -63,49 +59,99 @@ async function loadFiles() {
       card.classList.add("card");
 
       let previewElement;
+      console.log("src:", file.file_url);
 
-      if (file.mime_type.startsWith("image/")) {
+      if (file.file_type.startsWith("image/")) {
 
         previewElement = document.createElement("img");
-        previewElement.src = file.url;
+
+        previewElement.src = file.file_url;
+
+        
+
         previewElement.classList.add("preview");
       }
 
-      else if (file.mime_type.startsWith("video/")) {
+      else if (file.file_type.startsWith("video/")) {
 
         previewElement = document.createElement("video");
-        previewElement.src = file.url;
+
+        previewElement.src = file.file_url;
+
         previewElement.controls = true;
+
+        previewElement.classList.add("preview");
+      }
+
+      else if (file.file_type.startsWith("audio/")) {
+
+        previewElement = document.createElement("audio");
+
+        previewElement.src = file.file_url;
+
+        previewElement.controls = true;
+
+        previewElement.style.width = "100%";
+      }
+
+      else if (file.file_type === "application/pdf") {
+
+        previewElement = document.createElement("iframe");
+
+        previewElement.src = file.file_url;
+
+
+        previewElement.width = "100%";
+
+        previewElement.height = "500";
+
         previewElement.classList.add("preview");
       }
 
       else {
 
         previewElement = document.createElement("div");
+
         previewElement.classList.add("preview");
 
         previewElement.innerHTML = `
           <div style="
             display:flex;
+            flex-direction:column;
             align-items:center;
             justify-content:center;
             height:100%;
-            font-size:50px;
+            gap:10px;
+            font-size:18px;
           ">
-            ??
+            <div style="font-size:50px;">
+              ??
+            </div>
+
+            <a
+              href="${file.file_url}"
+              target="_blank"
+            >
+              Abrir arquivo
+            </a>
           </div>
         `;
       }
 
       const info = document.createElement("div");
+
       info.classList.add("file-info");
 
       info.innerHTML = `
-        <div class="file-name">${file.filename}</div>
+        <div class="file-name">
+          ${file.file_name}
+        </div>
       `;
 
       const deleteBtn = document.createElement("button");
+
       deleteBtn.innerText = "Excluir";
+
       deleteBtn.classList.add("delete-btn");
 
       deleteBtn.addEventListener("click", () => {
