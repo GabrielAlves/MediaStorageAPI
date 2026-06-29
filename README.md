@@ -1,6 +1,6 @@
-# MediaManagerAPI
+# MediaManager
 
-É uma API REST simples desenvolvida em Python para gerenciamento de arquivos multimídia (imagens e vídeos), com upload, listagem e exclusão com suporte à integração com AWS S3 ou armazenamento local.
+É um sistema simples desenvolvido em Python para gerenciamento de arquivos multimídia (imagens e vídeos), com upload, listagem e exclusão com suporte à integração com AWS S3 ou armazenamento local.
 
 ## Funcionalidades
 
@@ -23,8 +23,8 @@
 
 ## Como usar (Instruções para windows)
 
-1. Clone o repositório: `git clone https://github.com/GabrielAlves/MediaManagerAPI`
-2. Entre no diretório: `cd MediaManagerAPI`
+1. Clone o repositório: `git clone https://github.com/GabrielAlves/MediaManager`
+2. Entre no diretório: `cd MediaManager`
 3. Crie um ambiente virtual: `virtualenv venv`
 4. Ative o ambiente virtual: `venv\Scripts\activate` 
 5. Instale as dependências: `pip install -r requirements.txt`
